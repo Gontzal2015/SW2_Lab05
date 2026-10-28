@@ -15,6 +15,7 @@ const botonBajar = document.querySelector("#bajar-servidor");
 let misiones = [];
 
 
+
 formulario.addEventListener("submit", (evento) => {
   evento.preventDefault(); // Evita que el formulario recargue la página.
   agregarMision();
@@ -23,8 +24,17 @@ formulario.addEventListener("submit", (evento) => {
 botonBorrar.addEventListener("click", borrarTodo);
 
 function agregarMision() {
-  // TODO
   // crear objeto misión, incluir los valores de los campos y un id único
+  const mision = {
+    id: Date.now(),
+    titulo: campoTitulo.value,
+    descripcion: campoDescripcion.value,
+    dificultad: campoDificultad.value,
+    recompensa: campoRecompensa.value,
+  }
+  misiones.push(mision);
+  localStorage.setItem(mision.id, JSON.stringify(mision));
+  mostrarMisiones();
 }
 
 function mostrarMisiones() {
@@ -35,8 +45,10 @@ function mostrarMisiones() {
     listaVacia.textContent = "";
   }
 
-  // TODO: Recorre el array misiones y llama a mostrarMision(mision)
-  // para cada misión.
+  // Recorre el array misiones y llama a mostrarMision(mision) para cada misión.
+  for (let i=0; i<misiones.length; i++){
+    mostrarMision(misiones[i]);
+  }
 }
 
 function mostrarMision(mision) {
@@ -68,9 +80,17 @@ function guardarMisiones() {
 }
 
 function cargarMisiones() {
+  for (let i = 0; i < localStorage.length; i++) {
+    const clave = localStorage.key(i);
+    const mision = JSON.parse(localStorage.getItem(clave));
+    misiones.push(mision);
+  }
 }
 
 function borrarTodo() {
+  localStorage.clear();
+  misiones = [];
+  mostrarMisiones();
 }
 
 cargarMisiones();
